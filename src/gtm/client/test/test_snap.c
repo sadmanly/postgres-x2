@@ -10,6 +10,14 @@
 
 #define client_log(x)	printf x
 
+pthread_key_t     threadinfo_key;
+GTM_ThreadID      TopMostThreadID;
+int	tcp_keepalives_idle = 0;
+int	tcp_keepalives_interval = 0;
+int tcp_keepalives_count = 0;
+GTM_Timestamp _timestamp;
+
+
 int
 main(int argc, char *argv[])
 {
@@ -32,7 +40,7 @@ main(int argc, char *argv[])
 
 	for (ii = 0; ii < 20; ii++)
 	{
-		gxid[ii] = begin_transaction(conn, GTM_ISOLATION_RC);
+		gxid[ii] = begin_transaction(conn, GTM_ISOLATION_RC,&_timestamp);
 		if (gxid[ii] != InvalidGlobalTransactionId)
 			client_log(("Started a new transaction (GXID:%u)\n", gxid[ii]));
 		else
